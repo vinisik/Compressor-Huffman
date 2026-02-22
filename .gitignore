@@ -17,3 +17,5 @@ Thumbs.db
 
 # Dados/teste
 data/*
+.vs/
+-p/
