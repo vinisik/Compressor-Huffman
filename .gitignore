@@ -16,5 +16,4 @@ Thumbs.db
 !.vscode/launch.json
 
 # Dados/teste
-data/*.huff
-data/*.bin
+data/*
