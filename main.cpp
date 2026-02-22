@@ -1,22 +1,23 @@
 #include <iostream>
 #include "include/HuffmanTree.hpp"
 #include "include/FileHandler.hpp"
+#include "include/Encoder.hpp"
 
 int main() {
     std::string path = "data/teste.txt";
     
-    // 1. Contagem
     auto freqs = FileHandler::getFrequencies(path);
-    if (freqs.empty()) {
-        std::cerr << "Ficheiro vazio ou nao encontrado!" << std::endl;
-        return 1;
-    }
+    if (freqs.empty()) return 1;
 
-    // 2. Construção da Árvore
     Node* root = HuffmanTree::build(freqs);
 
-    std::cout << "Arvore de Huffman construida com sucesso!" << std::endl;
-    std::cout << "Raiz (Frequencia Total): " << root->freq << std::endl;
+    // Gerar o dicionário de códigos
+    std::map<char, std::string> dictionary = Encoder::generateCodes(root);
+
+    std::cout << "--- Dicionario de Huffman ---" << std::endl;
+    for (auto const& pair : dictionary) {
+        std::cout << "'" << pair.first << "': " << pair.second << std::endl;
+    }
 
     return 0;
 }
