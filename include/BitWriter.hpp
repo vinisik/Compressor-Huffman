@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <string>
+#include <map>
 
 class BitWriter {
 private:
@@ -14,9 +15,14 @@ public:
     BitWriter(const std::string& filename);
     ~BitWriter();
 
+    // Grava o cabeçalho com a tabela de frequências
+    void writeHeader(const std::map<char, unsigned>& frequencies);
+    // Grava um único bit (0 ou 1)
     void writeBit(int bit);
+    // Grava uma string de bits
     void writeString(const std::string& bitString);
-    void flush(); // Garante que bits restantes sejam escritos
+    // Garante que bits restantes sejam escritos
+    void flush(); 
 };
 
 #endif

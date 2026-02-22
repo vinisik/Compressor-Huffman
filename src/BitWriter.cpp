@@ -11,6 +11,22 @@ BitWriter::~BitWriter() {
     }
 }
 
+void BitWriter::writeHeader(const std::map<char, unsigned>& frequencies) {
+    if (!outFile.is_open()) return;
+
+    // Escreve a quantidade de entradas no mapa
+    size_t mapSize = frequencies.size();
+    outFile.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
+
+    // Escreve cada par (caractere, frequência)
+    for (auto const& pair : frequencies) {
+        char ch = pair.first;
+        unsigned freq = pair.second;
+        outFile.put(ch);
+        outFile.write(reinterpret_cast<const char*>(&freq), sizeof(freq));
+    }
+}
+
 void BitWriter::writeBit(int bit) {
     // Desloca o buffer para a esquerda e adiciona o bit no final
     buffer <<= 1;

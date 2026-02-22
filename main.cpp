@@ -9,11 +9,15 @@ int main() {
     std::string outputFile = "data/teste.huff";
 
     auto freqs = FileHandler::getFrequencies(inputFile);
+    if (freqs.empty()) return 1;
+    
     Node* root = HuffmanTree::build(freqs);
     auto dictionary = Encoder::generateCodes(root);
 
     // Gravação dos bits
     BitWriter writer(outputFile);
+
+    writer.writeHeader(freqs);
     
     // Abre o original para ler e converter cada caractere em bits
     std::ifstream in(inputFile, std::ios::binary);
