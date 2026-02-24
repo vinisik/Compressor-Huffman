@@ -5,10 +5,12 @@ Compressor de arquivos de alta performance baseado na **Codificação de Huffman
 ## **Funcionalidades**
 
 * **Compressão Lossless**: Redução do tamanho de arquivos sem perder um único bit de informação.  
-* **Interface Gráfica (GUI)**: Interface em Python Tkinter para selecionar arquivos e visualizar resultados.  
-* **Relatórios de Performance**: Cálculo automático do tamanho original, tamanho comprimido e porcentagem de economia de espaço.  
-* **Cabeçalho Binário**: Gravação inteligente da tabela de frequências no próprio arquivo .huff para permitir descompressão autônoma.  
-* **Multi-plataforma**: Suporte para Windows e Linux através de um Makefile adaptável.
+* **Processamento Assíncrono (Multithread)**: A interface gráfica (GUI) não para durante operações longas, utilizando threads para acompanhar o progresso em tempo real.  
+* **Processamento em Lote (Batch)**: Compressão automatizada de múltiplos arquivos de um diretório de uma só vez 
+* **Pré-visualização de Dicionário**: Tabela interativa que mostra como a árvore de Huffman remapeou os códigos ASCII em bits.
+* **Gerador de Testes Integrado**: Ferramenta na própria interface para criar arquivos `.txt` massivos com redundância, ideal para testar o stress e a taxa de compressão do algoritmo.
+* **Relatórios e Histórico (Logs)**: Acompanhamento detalhado do tempo de execução, tamanhos e economia de espaço em %. 
+* **Cabeçalho Binário**: Gravação inteligente da tabela de frequências no próprio arquivo `.huff` para permitir descompressão autônoma.  
 
 ## **Estrutura do Projeto**
 
@@ -19,7 +21,7 @@ Compressor de arquivos de alta performance baseado na **Codificação de Huffman
 * `gui\_compressor.py`: Interface gráfica para o usuário final.  
 * `Makefile`: Automatização do processo de construção do projeto.
 * `teste_arquivo.py`: Algoritmo que gera um arquivo .txt grande (500kb) com caracteres aleatórios para testar a compressão e descompressão
-* `interface.py`: Exibe uma interface interativa para facilitar o uso do algoritmo. 
+* `interface.py`:  Interface gráfica avançada com abas, progresso em tempo real e relatórios. 
 
 
 ## **Explicação dos Módulos**
@@ -39,10 +41,10 @@ Como o computador só escreve bytes inteiros (8 bits), estes módulos lidam com 
 - BitWriter: Utiliza operadores de deslocamento (`<<`) e máscaras (`|`) para acumular bits em um buffer de 1 byte. Quando o buffer enche, ele é "despejado" no disco.
 - BitReader: Realiza o inverso, lendo um byte e extraindo bit a bit para navegar na árvore de Huffman durante a descompressão.
 
-### **4\. Cabeçalho Binário (Header)**
-Para que o arquivo seja descompactado em qualquer máquina, a chave é salva no início do arquivo .huff.
-- É gravado o tamanho do alfabeto e os pares `(caractere, frequência)`.
-- Isso permite que o descompactador reconstrua exatamente a mesma árvore que o compressor utilizou.
+### **4\. Comunicação C++/Python**
+A integração entre Python e C++ é feita via stdout (saída padrão
+- O motor C++ calcula o total de bytes e emite avisos de progresso regulares (ex: `PROGRESS:50`).
+- O Python, rodando em uma thread separada via `subprocess.Popen`, lê essas linhas instantaneamente e atualiza as barras de progresso do Tkinter.
 
 
 ## **Como Utilizar**
@@ -82,4 +84,4 @@ Também é possível utilizar o binário diretamente via terminal:
 Este algoritmo é eficaz em arquivos de texto (`.txt`, `.csv`), arquivos de log e código-fonte. Em arquivos com alta redundância de caracteres, a taxa de compressão pode chegar a **40-60%** de economia.
 
 
-Projeto desenvolvido por **Vinicius Siqueira** como estudo de algoritmos de compressão e integração de sistemas C++ e Python. Parte do algoritmo foi baseado em um algoritmo existente feito durante a disciplina de Algoritmos e Estrutura de Dados II em 2023.
+Projeto desenvolvido por Vinicius Siqueira como estudo de algoritmos de compressão, estruturas de dados de baixo nível (C++) e integração inter-processos com interfaces Python. Parte da lógica base foi inspirada em conceitos de Algoritmos e Estrutura de Dados II.
